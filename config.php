@@ -6,8 +6,8 @@
 	* Date Created: 2024/03/20
 	* 
 	* This PHP script is used to access the database for querying
-  * 
-  */
+ 	 * 
+  	*/
 
 	$host = "localhost"; // Default host for MySQL
 	$port = "3306";      // Default port for MySQL
