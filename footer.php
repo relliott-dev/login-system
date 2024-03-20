@@ -6,8 +6,8 @@
 	* Date Created: 2024/03/20
 	* 
 	* This file is used to include a consistent footer across all pages
-    * It includes the current date and website name
-    * 
+	* It includes the current date and website name
+ 	* 
   	*/
     
 ?>
