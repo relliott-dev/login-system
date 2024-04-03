@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `forgot_passwords` (
 -- The table includes fields for security and analytics
 CREATE TABLE IF NOT EXISTS `audit_logs` (
 	`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-	`userid` BIGINT(20) NOT NULL,
+	`userid` BIGINT(20) DEFAULT NULL,
 	`action` VARCHAR(50) NOT NULL,
 	`description` TEXT DEFAULT NULL,
 	`ip` VARCHAR(15) DEFAULT NULL,
