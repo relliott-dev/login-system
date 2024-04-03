@@ -8,37 +8,43 @@
  *
  */
 
-body {
-    padding: 70px 50px 200px 200px;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+body
+{
+	padding: 70px 50px 200px 200px;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
 }
 
-.navbar, footer {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: 1030;
+.navbar, footer
+{
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 1030;
 }
 
-.nav-inner {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding-left: 200px;
-    padding-right: 200px;
+.nav-inner
+{
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding-left: 200px;
+	padding-right: 200px;
 }
 
-.navbar-nav {
-    display: flex;
+.navbar-nav
+{
+	display: flex;
 }
 
-.navbar-spacer {
-    flex-grow: 1;
+.navbar-spacer
+{
+	flex-grow: 1;
 }
 
-.icon-small {
-    width: 40px;
-    height: 40px;
+.icon-small
+{
+	width: 40px;
+	height: 40px;
 }
