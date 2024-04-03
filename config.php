@@ -18,6 +18,6 @@
 
 	$db = mysqli_connect("$host:$port", $user, $pass, $dbase) or die("Error " . mysqli_connect_error($db));
 	date_default_timezone_set("America/Chicago");
-    	mysqli_set_charset($db, 'utf8mb4');
+	mysqli_set_charset($db, 'utf8mb4');
 
 ?>
