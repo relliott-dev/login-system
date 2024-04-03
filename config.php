@@ -17,9 +17,12 @@
 	$dbase = "database_name";
 
 	//Connection string
-	$db = mysqli_connect("$host:$port", $user, $pass, $dbase) or die("Error " . mysqli_error($db));
+	$db = mysqli_connect("$host:$port", $user, $pass, $dbase) or die("Error " . mysqli_connect_error($db));
 
 	//Set the timezone
 	date_default_timezone_set("America/Chicago");
+
+	// Set the character encoding for the connection
+    	mysqli_set_charset($db, 'utf8mb4');
 
 ?>
