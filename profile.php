@@ -15,6 +15,8 @@
 	session_start();
 
 	include('config.php');
+	include('auditlogger.php');
+	include('getip.php');
 
 	if (!isset($_SESSION['username']))
 	{
@@ -53,6 +55,7 @@
 
 		if (mysqli_num_rows($checkResult) > 0)
 		{
+			logAudit($db, $userId, 'Profile Updated', 'User profile updated successfully', $real_ip_address);
 			$updateQuery = "UPDATE user_profiles SET first_name = ?, last_name = ?, gender = ?, date_of_birth = ?, street_address = ?, city = ?, state = ?, country = ?, zip_code = ?, phone_number = ?, about_me = ? WHERE userid = ?";
 			$updateStmt = mysqli_prepare($db, $updateQuery);
 			mysqli_stmt_bind_param($updateStmt, "sssssssssssi", $firstName, $lastName, $gender, $dateOfBirth, $streetAddress, $city, $state, $country, $zipCode, $phoneNumber, $aboutMe, $userId);
@@ -60,6 +63,7 @@
 		}
 		else
 		{
+			logAudit($db, $userId, 'Profile Created', 'User profile created successfully', $real_ip_address);
 			$insertQuery = "INSERT INTO user_profiles (userid, first_name, last_name, gender, date_of_birth, street_address, city, state, country, zip_code, phone_number, about_me) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			$insertStmt = mysqli_prepare($db, $insertQuery);
 			mysqli_stmt_bind_param($insertStmt, "isssssssssss", $userId, $firstName, $lastName, $gender, $dateOfBirth, $streetAddress, $city, $state, $country, $zipCode, $phoneNumber, $aboutMe);
