@@ -1,86 +1,86 @@
 <?php
 
-    /*
-    * Author: Russell Elliott
-    * Date Created: 2024/03/20
-    * 
-    * This script manages the user registration process
-    * It checks for empty fields, validates that the password and
-    * confirm password match, ensures the username and email are not
-    * already in use, hashes the password for secure storage, and 
-    * inserts the new user record into the database
-    * Successful registration redirects the user to the home page
-    * 
-    */
-    
-    session_start();
-    
-    include('config.php');
-    include("getip.php");
-    include('activationmail.php');
-    
-    $error_msg = '';
+	/*
+	* Author: Russell Elliott
+	* Date Created: 2024/03/20
+	* 
+	* This script manages the user registration process
+	* It checks for empty fields and validates that the password and confirm password match
+	* It ensures the username and email are not already in use and inserts the new user record into the database
+	* Successful registration redirects the user to the home page
+	* Customize the meta tags and content to suit your website's SEO and content strategy
+	* 
+	*/
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST')
+	session_start();
+
+	include('config.php');
+	include('auditlogger.php');
+	include('activationmail.php');
+	include("getip.php");
+
+	$error_msg = '';
+
+	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-        $username = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
-        $email = isset($_POST['email']) ? filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL) : '';
-        $password = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
-        $confirmpassword = isset($_POST['confirmpassword']) ? filter_input(INPUT_POST, 'confirmpassword', FILTER_SANITIZE_STRING) : '';
-        $mac = isset($_POST['mac']) ? filter_input(INPUT_POST, 'mac', FILTER_SANITIZE_STRING) : '';
+		$username = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
+		$email = isset($_POST['email']) ? filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL) : '';
+		$password = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
+		$confirmpassword = isset($_POST['confirmpassword']) ? filter_input(INPUT_POST, 'confirmpassword', FILTER_SANITIZE_STRING) : '';
+		$mac = isset($_POST['mac']) ? filter_input(INPUT_POST, 'mac', FILTER_SANITIZE_STRING) : '';
 
-        if (empty($username) || empty($email) || empty($password) || empty($confirmpassword))
+		if (empty($username) || empty($email) || empty($password) || empty($confirmpassword))
 		{
-            $error_msg = "Please fill all required fields";
-        }
+			$error_msg = "Please fill all required fields";
+		}
 		elseif ($password != $confirmpassword)
 		{
-            $error_msg = "The password and confirm password must match";
-        }
+			$error_msg = "The password and confirm password must match";
+		}
 		else
 		{
-            $query = "SELECT * FROM users WHERE username = ? OR email = ?";
-            $stmt = mysqli_prepare($db, $query);
-            mysqli_stmt_bind_param($stmt, "ss", $username, $email);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
+			$query = "SELECT * FROM user_accounts WHERE username = ? OR email = ?";
+			$stmt = mysqli_prepare($db, $query);
+			mysqli_stmt_bind_param($stmt, "ss", $username, $email);
+			mysqli_stmt_execute($stmt);
+			$result = mysqli_stmt_get_result($stmt);
 
-            if (mysqli_num_rows($result) > 0)
+			if (mysqli_num_rows($result) > 0)		
 			{
-                while ($row = mysqli_fetch_assoc($result))
+				while ($row = mysqli_fetch_assoc($result))
 				{
-                    if ($row['username'] == $username)
+					if ($row['username'] == $username)
 					{
-                        $error_msg = "The username is already in use";
-                        break;
-                    }
+						logAudit($db, null, 'Registration Attempt', 'Username already in use: ' . $username, $real_ip_address);
+						$error_msg = "The username is already in use";
+					}
 					elseif ($row['email'] == $email)
 					{
-                        $error_msg = "The email is already in use";
-                        break;
-                    }
-                }
-            }
+						logAudit($db, null, 'Registration Attempt', 'Email already in use: ' . $email, $real_ip_address);
+						$error_msg = "The email is already in use";
+					}
+				}
+			}
 			else
 			{
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $query = "INSERT INTO users (email, username, password, active, mac, ip) VALUES (?, ?, ?, 1, ?, ?)";
-                $registerStmt = mysqli_prepare($db, $query);
-                mysqli_stmt_bind_param($registerStmt, "sssss", $email, $username, $hashedPassword, $mac, $real_ip_address);
-                $result = mysqli_stmt_execute($registerStmt);
+				$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+				$query = "INSERT INTO user_accounts (email, username, password, active, mac, ip) VALUES (?, ?, ?, 1, ?, ?)";
+				$registerStmt = mysqli_prepare($db, $query);
+				mysqli_stmt_bind_param($registerStmt, "sssss", $email, $username, $hashedPassword, $mac, $real_ip_address);
+				$result = mysqli_stmt_execute($registerStmt);
 
-                if ($result)
+				if ($result)
 				{
+					logAudit($db, mysqli_insert_id($db), 'Registration Success', 'User registered successfully', $real_ip_address);
 					echo "<script>window.location.href = 'index.php';</script>";
-                    exit;
-                }
+				}
 				else
 				{
-                    $error_msg = "Error: Could not register user";
-                }
-            }
-        }
-    }
+					$error_msg = "Could not register user";
+				}
+			}
+		}
+	}
 	
 ?>
 
@@ -88,45 +88,51 @@
 <html lang="en">
 <head>
     
-    <meta charset="UTF-8">
-    <title>Registration Form</title>
-    <meta name="description" content="A short description of the page's content.">
-    <meta name="keywords" content="keyword1, keyword2, keyword3">
-    <meta name="author" content="Author's Name">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
+	<meta charset="UTF-8">
+	<title>Registration Form</title>
+	<meta name="description" content="A short description of the page's content.">
+	<meta name="keywords" content="keyword1, keyword2, keyword3">
+	<meta name="author" content="Author's Name">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="style.css">
     
 </head>
 <body>
 
-    <?php include('navbar.php'); ?>
+	<?php include('navbar.php'); ?>
     
-    <h1>User Registration</h1>
-	
-    <?php if (!empty($error_msg)) { echo '<p style="color: red;">' . $error_msg . '</p>'; } ?>
-	
-    <form action="register.php" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br><br>
+	<div class="container">
+		<h1>User Registration</h1>
+        
+		<?php if (!empty($error_msg)) { echo '<div class="alert alert-danger" role="alert">' . $error_msg . '</div>'; } ?>
+        
+		<form action="register.php" method="post" class="mt-3">
+        		<div class="form-group">
+			    	<label for="username">Username:</label>
+				<input type="text" id="username" name="username" class="form-control">
+        		</div>
+        		<div class="form-group">
+			    	<label for="email">Email:</label>		
+				<input type="email" id="email" name="email" class="form-control">
+			</div>
+			<div class="form-group">
+				<label for="password">Password:</label>
+				<input type="password" id="password" name="password" class="form-control">
+			</div>
+			<div class="form-group">
+				<label for="confirmpassword">Confirm Password:</label>
+				<input type="password" id="confirmpassword" name="confirmpassword" class="form-control">
+			</div>
+			<button type="submit" class="btn btn-primary">Register</button>
+		</form>
+	</div>
 
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email"><br><br>
+	<?php include('footer.php'); ?>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-
-        <label for="confirmpassword">Confirm Password:</label>
-        <input type="password" id="confirmpassword" name="confirmpassword"><br><br>
-
-        <button type="submit">Register</button>
-    </form>
-    
-    <?php include('footer.php'); ?>
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
 </body>
 </html>
