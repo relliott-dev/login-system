@@ -23,9 +23,7 @@
 	$error_msg = '';
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
-	{
-		logAudit($db, $userId, 'Password Reset Request', 'User requested a password reset', $real_ip_address);
-        
+	{        
 		$email = isset($_POST['email']) ? filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL) : '';
 		
 		if (empty($email))
@@ -48,6 +46,8 @@
 			{
 				$accountInfo = mysqli_fetch_array($result);
 				$userId = $accountInfo['userid'];
+				
+				logAudit($db, $userId, 'Password Reset Request', 'User requested a password reset', $real_ip_address);
 				
 				$code = rand(100000, 999999);
 				
