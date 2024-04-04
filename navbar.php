@@ -9,7 +9,21 @@
 	* The navigation bar includes a dropdown menu under 'Page 1' and a conditional display of user-related links (Profile/Logout or Sign Up/Login)
 	* 
 	*/
-    
+
+	session_start();
+
+	$timeoutDuration = 300;
+
+	if (isset($_SESSION['LAST_ACTIVITY']))
+	{
+		if (time() - $_SESSION['LAST_ACTIVITY'] > $timeoutDuration)
+		{
+			header('Location: logout.php');
+		}
+	}
+
+	$_SESSION['LAST_ACTIVITY'] = time();
+
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
