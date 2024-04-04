@@ -14,6 +14,7 @@
 	*/
 	
 	include("config.php");
+    	include('sessionmanager.php');
 	include('auditlogger.php');
 	include('activationmail.php');
 	include("getip.php");
