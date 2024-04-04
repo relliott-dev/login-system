@@ -1,5 +1,16 @@
 <?php
 
+	/*
+	* Author: Russell Elliott
+	* Date Created: 2024/03/20
+	* 
+	* This script handles user login functionality
+	* It checks if the user exists in the database, verifies the password, and updates the user's last login IP and time
+	* If the login is successful, the user is redirected to the index page
+	* Customize the meta tags and content to suit your website's SEO and content strategy
+	* 
+	*/
+
 	session_start();
     
 	include('config.php');
