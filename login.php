@@ -11,9 +11,8 @@
 	* 
 	*/
 
-	session_start();
-    
 	include('config.php');
+	include('sessionmanager.php');
 	include('auditlogger.php');
 	include("getip.php");
 	
@@ -57,6 +56,8 @@
 						{
 							logAudit($db, $getInfo['userid'], 'Login Success', 'User logged in successfully', $real_ip_address);
 							$_SESSION['username'] = $getInfo['username'];
+							$_SESSION['role'] = $getInfo['role'];
+							$_SESSION['banned'] = $getInfo['banned'];
 							echo "<script>window.location.href = 'index.php';</script>";
 						}
 						else
