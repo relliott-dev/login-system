@@ -10,20 +10,6 @@
 	* 
 	*/
 
-	session_start();
-
-	$timeoutDuration = 300;
-
-	if (isset($_SESSION['LAST_ACTIVITY']))
-	{
-		if (time() - $_SESSION['LAST_ACTIVITY'] > $timeoutDuration)
-		{
-			header('Location: logout.php');
-		}
-	}
-
-	$_SESSION['LAST_ACTIVITY'] = time();
-
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
@@ -50,6 +36,9 @@
 			<div class="navbar-spacer"></div>
             
 			<ul class="nav navbar-nav navbar-right">
+				<?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'admin'): ?>
+					<li class="nav-item"><a href="admin.php" class="nav-link"><span class="glyphicon glyphicon-cog"></span> Admin</a></li>
+				<?php endif; ?>
 				<?php if (isset($_SESSION['username'])): ?>
 					<li class="nav-item"><a href="profile.php" class="nav-link"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
 					<li class="nav-item"><a href="logout.php" class="nav-link"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
