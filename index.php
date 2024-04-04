@@ -11,6 +11,8 @@
 	* 
 	*/
 
+	    include('sessionmanager.php');
+
 ?>
 
 <!DOCTYPE html>
