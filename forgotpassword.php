@@ -13,8 +13,6 @@
 	* 
 	*/
 	
-	session_start();
-	
 	include("config.php");
 	include('auditlogger.php');
 	include('activationmail.php');
