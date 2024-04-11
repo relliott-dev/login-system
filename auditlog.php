@@ -1,5 +1,16 @@
 <?php
 
+	/*
+	* 
+	* Author: Russell Elliott
+	* Date Created: 2024/04/11
+	* 
+	* This PHP script is designed to fetch audit log entries for a specific user
+	* The user's username is received via a GET request and used to query the database
+	* The script also handles pagination and returns the result as JSON
+	* 
+	*/
+
 	session_start();
 
 	include('config.php');
