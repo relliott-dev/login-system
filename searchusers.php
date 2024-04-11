@@ -1,5 +1,16 @@
 <?php
 
+	/*
+	* 
+	* Author: Russell Elliott
+	* Date Created: 2024/04/11
+	* 
+	* This script is responsible for fetching user data from the database based on search criteria, pagination settings, and sorting parameters
+	* It checks if a user is logged in and has admin privileges before proceeding with data retrieval
+	* The script returns the user data in JSON format, including information about total pages and the current page for front-end pagination controls
+	* 
+	*/
+
 	session_start();
 
 	include('config.php');
