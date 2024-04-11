@@ -1,5 +1,16 @@
 <?php
 
+	/*
+	* 
+	* Author: Russell Elliott
+	* Date Created: 2024/04/11
+	* 
+	* This PHP script checks if the current session's user is an administrator and not banned
+	* If the user is not an admin or is banned, they are redirected to the logout page
+	* It also updates the 'LAST_ACTIVITY' session variable to track user activity for session timeouts
+	* 
+	*/
+
 	session_start();
 
 	include('config.php');
