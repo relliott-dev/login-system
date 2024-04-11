@@ -1,5 +1,16 @@
 <?php
 
+	/*
+	* 
+	* Author: Russell Elliott
+	* Date Created: 2024/04/11
+	* 
+	* This script is used to change the ban status of a user in the system
+	* It accepts JSON input containing the username and new ban status
+	* The script checks if the user is an admin before allowing changes to the ban status
+	* 
+	*/
+
 	session_start();
 
 	include('config.php');
