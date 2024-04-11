@@ -1,5 +1,16 @@
 <?php
 
+	/*
+	* 
+	* Author: Russell Elliott
+	* Date Created: 2024/04/11
+	* 
+	* This script checks the current session for a valid admin user
+	* If the session is invalid or the user is not an admin, it prepares a response to trigger a logout
+	* The 'isAdmin' function is defined to check the user's role and banned status in the database
+	* 
+	*/
+
 	session_start();
 
 	include('config.php');
