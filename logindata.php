@@ -1,5 +1,16 @@
 <?php
 
+	/*
+	* 
+	* Author: Russell Elliott
+	* Date Created: 2024/04/11
+	* 
+	* This script gathers registration statistics over the past five years for display in charts
+	* It includes data on the total number of registrations per day, and the number of banned and active users
+	* The data is then encoded in JSON format for use with charting libraries on the frontend
+	* 
+	*/
+
 	session_start();
 
 	include('config.php');
