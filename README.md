@@ -2,43 +2,48 @@
 
 ## Overview
 
-This repository contains a PHP-based login system designed to provide secure authentication and user management functionality for web applications. It includes features such as user registration, login, logout, and session management, with planned expansions for password recovery, account activation via email, and administrative controls.
+This repository contains a PHP-based login system designed to provide secure authentication and user management functionality for web applications. It supports user registration, login, session management, account activation, password recovery, and admin functionalities.
 
 ## Features
 
-### Current Features
+- Allows new users to register by providing their username, email, and password
+- Authenticates users based on their credentials and initiates a session
+- Terminates the user's session and redirects to the login page
+- Manages user sessions to ensure secure access to restricted areas
+- Sends account activation emails and password reset links
+- Allows users to reset their password through a secure process
+- Enables users to update their email and other account information
+- Provides administrative controls for managing user accounts
+- Visualizes user login data and other relevant statistics using JavaScript charts
+- Enhances the system with asynchronous data loading and session timeouts for improved user experience
 
-- User Registration: Allows new users to register by providing their username, email, and password
-- User Login: Authenticates users based on their credentials and initiates a session
-- Logout: Terminates the user's session and redirects to the login page
-- Session Management: Manages user sessions to ensure secure access to restricted areas
+## Requirements
 
-### Planned Features
-
-- PHPMailer Integration: For sending account activation emails and password reset links
-- Account Activation: Requires new users to activate their accounts via an email link
-- Password Recovery: Allows users to reset their password through a secure process
-- Profile Management: Enables users to update their email and other account information
-- Admin Functionality: Provides administrative controls for managing user accounts
-- Dynamic Charts: Visualizes user login data and other relevant statistics using JavaScript charts
-- AJAX Integration: Enhances the system with asynchronous data loading and session timeouts for improved user experience
+- PHP (version 7.4 or higher recommended)
+- MySQL or MariaDB
+- PHPMailer
 
 ## Installation
 
-Ensure you have PHP and MySQL/MariaDB installed on your server or development machine
+1. Clone the repository or download the source code
 
-Once they are installed, clone this repository to your desired location:
+2. Ensure that PHP and MySQL/MariaDB are installed on your server. Here are guides to install [PHP](https://www.php.net/manual/en/install.php) and [MySQL](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
 
-`git clone https://github.com/yourusername/login-system.git`
+3. Download PHPMailer from [PHPMailer](https://github.com/PHPMailer/PHPMailer) and place it in the main directory
 
-Navigate to the cloned repository folder and import the user_accounts.sql file into your database to set up the required tables:
+4. Import the SQL schema to set up your database tables:
 
 ```
-cd login-system
 mysql -u username -p database_name < user_accounts.sql
 ```
 
-Update the config.php file with your database connection details.
+5. Edit the `config.php` file with your database settings and `activationmail.php` with your PHPMailer settings
+
+6. **(Optional)**: If you want to populate your database with sample data to test the functionality of the login system, import the `randomusers.sql` file:
+
+```
+mysql -u username -p database_name < randomusers.sql
+```
 
 ## Usage
 
