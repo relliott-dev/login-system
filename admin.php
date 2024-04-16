@@ -26,6 +26,7 @@
 	$search = $_GET['search'] ?? '';
 	$page = $_GET['page'] ?? 1;
 	$perPage = 20;
+	$range = 2;
 	$offset = ($page - 1) * $perPage;
 	$sort = $_GET['sort'] ?? 'username';
 	$order = $_GET['order'] ?? 'asc';
