@@ -17,7 +17,7 @@
 		<span class="navbar-toggler-icon"></span>
 	</button>
 
-	<a class="navbar-brand mx-auto" href="index.php">
+	<a class="navbar-brand" href="index.php">
 		<img src="images/home-icon.png" alt="Home" class="icon-small home-icon">
 	</a>
 
@@ -52,8 +52,7 @@
 				<li class="nav-item"><a href="login.php" class="nav-link"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 			<?php endif; ?>
 		</ul>
-	</div
-		
+	</div>
 </nav>
 
 <script>
