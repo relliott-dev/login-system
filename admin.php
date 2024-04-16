@@ -15,43 +15,12 @@
 	include('config.php');
 	include('sessionmanager.php');
 
-	session_start();
-
 	if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin')
 	{
-		header("Location: login.php");
+		http_response_code(403);
+		header("Location: index.php");
 		exit;
 	}
-
-	$search = $_GET['search'] ?? '';
-	$page = $_GET['page'] ?? 1;
-	$perPage = 20;
-	$range = 2;
-	$offset = ($page - 1) * $perPage;
-	$sort = $_GET['sort'] ?? 'username';
-	$order = $_GET['order'] ?? 'asc';
-
-	$allowedSort = ['username', 'email', 'banned'];
-	$allowedOrder = ['asc', 'desc'];
-	$sort = in_array($sort, $allowedSort) ? $sort : 'username';
-	$order = in_array($order, $allowedOrder) ? $order : 'asc';
-
-	$query = "SELECT * FROM user_accounts WHERE username LIKE ? OR email LIKE ? ORDER BY $sort $order LIMIT ? OFFSET ?";
-	$stmt = $db->prepare($query);
-	$searchTerm = "%$search%";
-	$stmt->bind_param("ssii", $searchTerm, $searchTerm, $perPage, $offset);
-	$stmt->execute();
-	$result = $stmt->get_result();
-
-	$users = $result->fetch_all(MYSQLI_ASSOC);
-
-	$totalQuery = "SELECT COUNT(*) as total FROM user_accounts WHERE username LIKE ? OR email LIKE ?";
-	$totalStmt = $db->prepare($totalQuery);
-	$totalStmt->bind_param("ss", $searchTerm, $searchTerm);
-	$totalStmt->execute();
-	$totalResult = $totalStmt->get_result();
-	$totalRow = $totalResult->fetch_assoc();
-	$totalPages = ceil($totalRow['total'] / $perPage);
 
 ?>
 
@@ -99,34 +68,7 @@
 		</div>
 
 		<div id="pagination-container" class="pagination">
-			<?php
-
-				if ($page > 1)
-				{
-					echo '<a href="?page=' . ($page - 1) . '&search=' . urlencode($search) . '">&laquo; Previous</a>';
-				}
-
-				$start = max($page - $range, 1);
-				$end = min($page + $range, $totalPages);
-
-				for ($i = $start; $i <= $end; $i++)
-				{
-					if ($i == $page)
-					{
-						echo '<span class="active">' . $i . '</span>';
-					}
-					else
-					{
-						echo '<a href="?page=' . $i . '&search=' . urlencode($search) . '">' . $i . '</a>';
-					}
-				}
-
-				if ($page < $totalPages)
-				{
-					echo '<a href="?page=' . ($page + 1) . '&search=' . urlencode($search) . '">Next &raquo;</a>';
-				}
-
-			?>
+			<!-- Pagination will be loaded here via JavaScript -->
 		</div>
 
 		<div class="table-spacing"></div>
@@ -157,9 +99,12 @@
 
 	<script>
 
+	let selectedUsername = '';
+	let currentSortColumn = 'username';
+	let currentSortOrder = 'asc';
+
 	function updateTable(users)
 	{
-		console.log(users);
 		const tableBody = document.getElementById("usersTable").getElementsByTagName('tbody')[0];
 		tableBody.innerHTML = "";
 
@@ -197,11 +142,10 @@
 		});
 	}
 
-	let selectedUsername = '';
-
 	function fetchUserInformation(username, page = 1)
 	{
 		selectedUsername = username;
+		
 		fetch(`auditlog.php?username=${encodeURIComponent(username)}&page=${page}`)
 		.then(response =>
 		{
@@ -237,7 +181,22 @@
 		const paginationContainer = document.getElementById("pagination-container");
 		paginationContainer.innerHTML = "";
 
-		for (let i = 1; i <= totalPages; i++)
+		if (currentPage > 1)
+		{
+			let firstPageLink = document.createElement('a');
+			firstPageLink.innerText = 'First';
+			firstPageLink.href = "#";
+			
+			firstPageLink.addEventListener('click', (e) =>
+			{
+				e.preventDefault();
+				searchUsers(1, sort, order, search);
+			});
+			
+			paginationContainer.appendChild(firstPageLink);
+		}
+
+		for (let i = Math.max(1, currentPage - 4); i <= Math.min(totalPages, currentPage + 4); i++)
 		{
 			let pageLink = document.createElement('a');
 			pageLink.innerText = i;
@@ -245,11 +204,11 @@
 			if (currentPage === i)
 			{
 				pageLink.classList.add('active');
+				pageLink.removeAttribute('href');
 			}
 			else
 			{
 				pageLink.href = "#";
-                    
 				pageLink.addEventListener('click', (e) =>
 				{
 					e.preventDefault();
@@ -259,6 +218,20 @@
 
 			paginationContainer.appendChild(pageLink);
 		}
+
+		if (currentPage < totalPages)
+		{
+			let lastPageLink = document.createElement('a');
+			lastPageLink.innerText = 'Last';
+			lastPageLink.href = "#";
+			lastPageLink.addEventListener('click', (e) =>
+			{
+				e.preventDefault();
+				searchUsers(totalPages, sort, order, search);
+			});
+		
+			paginationContainer.appendChild(lastPageLink);
+		}
 	}
 
 	function setupAuditLogPagination(totalEntries, currentPage)
@@ -267,7 +240,22 @@
 		paginationContainer.innerHTML = "";
 		const totalPages = Math.ceil(totalEntries / 20);
 
-		for (let i = 1; i <= totalPages; i++)
+		if (currentPage > 1)
+		{
+			let firstPageLink = document.createElement('a');
+			firstPageLink.innerText = 'First';
+			firstPageLink.href = "#";
+
+			firstPageLink.addEventListener('click', (e) =>
+			{
+				e.preventDefault();
+				fetchUserInformation(selectedUsername, 1);
+			});
+
+			paginationContainer.appendChild(firstPageLink);
+		}
+
+		for (let i = Math.max(1, currentPage - 4); i <= Math.min(totalPages, currentPage + 4); i++)
 		{
 			let pageLink = document.createElement('a');
 			pageLink.innerText = i;
@@ -275,6 +263,7 @@
 			if (currentPage === i)
 			{
 				pageLink.classList.add('active');
+				pageLink.removeAttribute('href');
 			}
 			else
 			{
@@ -289,10 +278,22 @@
 
 			paginationContainer.appendChild(pageLink);
 		}
-	}
 
-	let currentSortColumn = 'username';
-	let currentSortOrder = 'asc';
+		if (currentPage < totalPages)
+		{
+			let lastPageLink = document.createElement('a');
+			lastPageLink.innerText = 'Last';
+			lastPageLink.href = "#";
+
+			lastPageLink.addEventListener('click', (e) =>
+			{
+				e.preventDefault();
+				fetchUserInformation(selectedUsername, totalPages);
+			});
+
+			paginationContainer.appendChild(lastPageLink);
+		}
+	}
 
 	function sortUsers(column)
 	{
@@ -318,7 +319,6 @@
 		}
 
 		const url = `searchusers.php?page=${page}&sort=${sort}&order=${order}&search=${encodeURIComponent(search)}`;
-		console.log("Requesting data from:", url);
 
 		fetch(url)
 		.then(response =>
@@ -332,7 +332,6 @@
 		})
 		.then(data =>
 		{
-			console.log("Data received:", data);
 			updateTable(data.users);
 			setupPagination(data.totalPages, data.currentPage, data.sort, data.order, data.search);
 		})
@@ -344,7 +343,6 @@
 
 	function toggleBan(username, isBanned)
 	{
-		console.log(`Toggling ban status for ${username}, isBanned: ${isBanned}`);
 		const banStatus = isBanned ? 0 : 1;
 
 		fetch('toggleban.php',
@@ -371,46 +369,6 @@
 		.catch(error =>
 		{
 			console.error('Error:', error);
-		});
-	}
-
-	function updateRegistrationChart(timeRange)
-	{
-		const endDate = new Date();
-		let startDate;
-
-		switch (timeRange)
-		{
-			case '1m':
-				startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 1, endDate.getDate());
-				break;
-			case '3m':
-				startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 3, endDate.getDate());
-				break;
-			case '6m':
-				startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 6, endDate.getDate());
-				break;
-			case '1y':
-				startDate = new Date(endDate.getFullYear() - 1, endDate.getMonth(), endDate.getDate());
-				break;
-			case '5y':
-				startDate = new Date(endDate.getFullYear() - 5, endDate.getMonth(), endDate.getDate());
-				break;
-			default:
-				startDate = new Date(endDate.getFullYear() - 5, endDate.getMonth(), endDate.getDate());
-		}
-
-		fetch(`logindata.php?start=${startDate.toISOString().split('T')[0]}&end=${endDate.toISOString().split('T')[0]}`)
-		.then(response => response.json())
-		.then(data =>
-		{
-			registrationChart.data.labels = data.registration.labels;
-			registrationChart.data.datasets[0].data = data.registration.data;
-			registrationChart.update();
-		})
-		.catch(error =>
-		{
-			console.error('Fetch error:', error);
 		});
 	}
 
