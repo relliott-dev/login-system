@@ -4,16 +4,13 @@
  * Date Created: 2024/03/20
  *
  * This stylesheet defines the layout and appearance of the navigation bar and footer across the website
- * It ensures a consistent look and feel while providing a responsive design
+ * It ensures a consistent look and feel while providing a responsive design for Mobile and Desktop
  *
  */
 
 body
 {
-	padding: 70px 50px 200px 200px;
-	margin: 0;
-	display: flex;
-	flex-direction: column;
+	padding: 70px 20px 200px;
 }
 
 .navbar, footer
@@ -21,26 +18,9 @@ body
 	position: fixed;
 	left: 0;
 	right: 0;
+	height: 56px;
+	padding: 0 15px;
 	z-index: 1030;
-}
-
-.nav-inner
-{
-	display: flex;
-	align-items: center;
-	width: 100%;
-	padding-left: 200px;
-	padding-right: 200px;
-}
-
-.navbar-nav
-{
-	display: flex;
-}
-
-.navbar-spacer
-{
-	flex-grow: 1;
 }
 
 .icon-small
@@ -49,13 +29,13 @@ body
 	height: 40px;
 }
 
-
+/* Dropdown Menu Styles */
 .dropdown-menu
 {
 	background-color: #28a745;
-	border: none;
-	border-radius: 0;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 0;
+	border: none;
 }
 
 .dropdown-item
@@ -68,4 +48,122 @@ body
 {
 	background-color: #218838;
 	color: #ffffff;
+}
+
+/* Table Styles */
+.table-controls
+{
+	margin-bottom: 10px;
+}
+
+.table th, .table td
+{
+	text-align: center;
+	white-space: nowrap;
+	font-size: 14px;
+}
+
+.table-spacing
+{
+	margin-bottom: 50px;
+}
+
+.pagination
+{
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: 4px;
+}
+
+.pagination a
+{
+	margin: 4px;
+	padding: 8px 12px;
+	font-size: 14px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	color: #007bff;
+	text-decoration: none;
+}
+
+.pagination a.active
+{
+	background-color: #007bff;
+	color: white;
+	border-color: #007bff;
+}
+
+.selected-row
+{
+	background-color: #f0f0f0;
+}
+
+/* Mobile Styles */
+@media (max-width: 767px)
+{
+	.left-panel, .right-panel
+	{
+		position: fixed;
+		top: 56px;
+		bottom: 0;
+		width: 250px;
+		overflow-y: auto;
+		background-color: #28a745;
+		color: #ffffff;
+		transform: translateX(-100%);
+		transition: transform 0.3s ease-in-out;
+	}
+
+	.left-panel
+	{
+		left: 0;
+		transform: translateX(-100%);
+	}
+
+	.right-panel
+	{
+		right: 0;
+		transform: translateX(100%);
+	}
+
+	.show-left, .show-right
+	{
+		transform: translateX(0);
+	}
+
+	.panel .nav-link
+	{
+		color: #ffffff;
+		padding: 12px 15px;
+		font-size: 20px;
+		margin: 5px 0;
+	}
+}
+
+/* Desktop Styles */
+@media (min-width: 768px)
+{
+	.navbar
+	{
+		padding: 0 200px;
+	}
+    
+	.left-panel, .right-panel
+	{
+		order: 2;
+		position: static;
+		transform: none;
+		width: auto;
+		overflow-y: visible;
+	}
+    
+	.right-panel
+	{
+		margin-left: auto;
+	}
+    
+	.navbar .nav-item
+	{
+		position: relative;
+	}
 }
