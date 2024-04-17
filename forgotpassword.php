@@ -12,7 +12,9 @@
 	* Customize the meta tags and content to suit your website's SEO and content strategy
 	* 
 	*/
-	
+
+	session_start();
+
 	include("config.php");
 	include('auditlogger.php');
 	include('activationmail.php');
