@@ -12,8 +12,9 @@
 	* 
 	*/
 
+	session_start();
+
 	include("config.php");
-	include('sessionmanager.php');
 	include('auditlogger.php');
 	include("getip.php");
 
@@ -21,14 +22,22 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		$code = isset($_POST['code']) ? filter_input(INPUT_POST, 'code', FILTER_SANITIZE_STRING) : '';
-		$email = isset($_POST['email']) ? filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL) : '';
-		$password = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
-		$confirmpassword = isset($_POST['confirmpassword']) ? filter_input(INPUT_POST, 'confirmpassword', FILTER_SANITIZE_STRING) : '';
+		$code = isset($_POST['code']) ? trim(filter_input(INPUT_POST, 'code', FILTER_SANITIZE_STRING)) : '';
+		$email = isset($_POST['email']) ? trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) : '';
+		$password = isset($_POST['password']) ? trim(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING)) : '';
+		$confirmpassword = isset($_POST['confirmpassword']) ? trim(filter_input(INPUT_POST, 'confirmpassword', FILTER_SANITIZE_STRING)) : '';
 
-		if (empty($code) || empty($password))
+		if (empty($code) || empty($email) || empty($password) || empty($confirmpassword))
 		{
 			$error_msg = "Please fill all required fields";
+		}
+		else if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+		{
+			$error_msg = "Invalid email format";
+		}
+		else if (!ctype_digit($code))
+		{
+			$error_msg = "Code must contain only numbers";
 		}
 		else if ($password != $confirmpassword)
 		{
