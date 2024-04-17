@@ -12,6 +12,8 @@
 	* 
 	*/
 
+	ob_start();
+
 	include('config.php');
 	include('sessionmanager.php');
 
