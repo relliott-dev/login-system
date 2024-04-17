@@ -13,25 +13,6 @@
 
 	session_start();
 
-	include('config.php');
-
-	if (isset($_SESSION['username']) && !isAdmin($db, $_SESSION['username']))
-	{
-		header('Location: logout.php');
-		exit;
-	}
-
-	function isAdmin($db, $username)
-	{
-		$query = "SELECT role, banned FROM user_accounts WHERE username = ?";
-		$stmt = $db->prepare($query);
-		$stmt->bind_param("s", $username);
-		$stmt->execute();
-		$result = $stmt->get_result();
-		$userInfo = $result->fetch_assoc();
-		return $userInfo && $userInfo['role'] === 'admin' && $userInfo['banned'] === 0;
-	}
-
 	$_SESSION['LAST_ACTIVITY'] = time();
 
 ?>
