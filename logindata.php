@@ -18,7 +18,7 @@
 	if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin')
 	{
 		http_response_code(403);
-		echo json_encode(['error' => 'Unauthorized access']);
+		header("Location: index.php");
 		exit;
 	}
 
