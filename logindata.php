@@ -15,6 +15,20 @@
 
 	include('config.php');
 
+	if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest')
+	{
+		http_response_code(403);
+		header("Location: index.php");
+		exit;
+	}
+
+	if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin')
+	{
+		http_response_code(403);
+		echo json_encode(['error' => 'Unauthorized access']);
+		exit;
+	}
+
 	$endDate = new DateTime();
 	$startDate = (new DateTime())->modify('-5 years');
 
