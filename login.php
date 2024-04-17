@@ -11,8 +11,9 @@
 	* 
 	*/
 
+	session_start();
+
 	include('config.php');
-	include('sessionmanager.php');
 	include('auditlogger.php');
 	include("getip.php");
 	
