@@ -17,7 +17,8 @@
 
 	if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin')
 	{
-		echo json_encode(['success' => false, 'message' => 'Access denied.']);
+		http_response_code(403);
+		header("Location: index.php");
 		exit;
 	}
 
