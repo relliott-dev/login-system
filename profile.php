@@ -19,7 +19,9 @@
 
 	if (!isset($_SESSION['username']))
 	{
-		header("Location: login.php");
+		http_response_code(403);
+		header("Location: index.php");
+		exit;
 	}
 
 	$username = $_SESSION['username'];
@@ -34,17 +36,20 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		$firstName = mysqli_real_escape_string($db, $_POST['firstName']);
-		$lastName = mysqli_real_escape_string($db, $_POST['lastName']);
-		$gender = mysqli_real_escape_string($db, $_POST['gender']);
-		$dateOfBirth = mysqli_real_escape_string($db, $_POST['dateOfBirth']);
-		$streetAddress = mysqli_real_escape_string($db, $_POST['streetAddress']);
-		$city = mysqli_real_escape_string($db, $_POST['city']);
-		$state = mysqli_real_escape_string($db, $_POST['state']);
-		$country = mysqli_real_escape_string($db, $_POST['country']);
-		$zipCode = mysqli_real_escape_string($db, $_POST['zipCode']);
-		$phoneNumber = mysqli_real_escape_string($db, $_POST['phoneNumber']);
-		$aboutMe = mysqli_real_escape_string($db, $_POST['aboutMe']);
+		$firstName = isset($_POST['firstName']) ? trim(mysqli_real_escape_string($db, $_POST['firstName'])) : '';
+		$lastName = isset($_POST['lastName']) ? trim(mysqli_real_escape_string($db, $_POST['lastName'])) : '';
+		$gender = isset($_POST['gender']) ? trim(mysqli_real_escape_string($db, $_POST['gender'])) : '';
+		$dateOfBirth = isset($_POST['dateOfBirth']) ? trim(mysqli_real_escape_string($db, $_POST['dateOfBirth'])) : '';
+		$streetAddress = isset($_POST['streetAddress']) ? trim(mysqli_real_escape_string($db, $_POST['streetAddress'])) : '';
+		$city = isset($_POST['city']) ? trim(mysqli_real_escape_string($db, $_POST['city'])) : '';
+		$state = isset($_POST['state']) ? trim(mysqli_real_escape_string($db, $_POST['state'])) : '';
+		$country = isset($_POST['country']) ? trim(mysqli_real_escape_string($db, $_POST['country'])) : '';
+		$zipCode = isset($_POST['zipCode']) ? trim(mysqli_real_escape_string($db, $_POST['zipCode'])) : '';
+		$phoneNumber = isset($_POST['phoneNumber']) ? trim(mysqli_real_escape_string($db, $_POST['phoneNumber'])) : '';
+		$aboutMe = isset($_POST['aboutMe']) ? trim(mysqli_real_escape_string($db, $_POST['aboutMe'])) : '';
+
+		$validDateOfBirth = validateDateOfBirth($dateOfBirth);
+		$validPhoneNumber = validatePhoneNumber($phoneNumber);
 
 		$checkQuery = "SELECT userid FROM user_profiles WHERE userid = ?";
 		$checkStmt = mysqli_prepare($db, $checkQuery);
@@ -94,6 +99,27 @@
 			'phone_number' => '',
 			'about_me' => ''
 		];
+	}
+
+	function validateDateOfBirth($date)
+	{
+		if (preg_match("/^(\d{4})-(\d{2})-(\d{2})$/", $date, $matches))
+		{
+			if (checkdate($matches[2], $matches[3], $matches[1]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function validatePhoneNumber($phoneNumber)
+	{
+		if (preg_match("/^\d{3}-\d{3}-\d{4}$/", $phoneNumber))
+		{
+			return true;
+		}
+		return false;
 	}
 
 ?>
