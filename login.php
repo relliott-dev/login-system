@@ -12,7 +12,6 @@
 	*/
 
 	include('config.php');
-	include('sessionmanager.php');
 	include('auditlogger.php');
 	include("getip.php");
 	
@@ -20,8 +19,8 @@
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		$username = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
-		$password = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
+		$username = isset($_POST['username']) ? trim(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING)) : '';
+		$password = isset($_POST['password']) ? trim(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING)) : '';
 		
 		if (empty($username) || empty($password))
 		{
