@@ -9,13 +9,6 @@
 	* 
 	*/
 
-	if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest')
-	{
-		http_response_code(403);
-		header("Location: index.php");
-		exit;
-	}
-
 	function logAudit($db, $userId, $action, $description, $ip)
 	{
 		$query = "INSERT INTO audit_logs (userid, action, description, ip) VALUES (?, ?, ?, ?)";
