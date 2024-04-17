@@ -10,13 +10,6 @@
 	* 
 	*/
 
-	if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest')
-	{
-		http_response_code(403);
-		header("Location: index.php");
-		exit;
-	}
-
 	require __DIR__.'/PHPMailer/src/Exception.php';
 	require __DIR__.'/PHPMailer/src/PHPMailer.php';
 	require __DIR__.'/PHPMailer/src/SMTP.php';
