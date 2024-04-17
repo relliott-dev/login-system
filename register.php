@@ -12,8 +12,9 @@
 	* 
 	*/
 
+	session_start();
+
 	include('config.php');
-	include('sessionmanager.php');
 	include('auditlogger.php');
 	include('activationmail.php');
 	include("getip.php");
@@ -22,11 +23,11 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		$username = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
-		$email = isset($_POST['email']) ? filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL) : '';
-		$password = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
-		$confirmpassword = isset($_POST['confirmpassword']) ? filter_input(INPUT_POST, 'confirmpassword', FILTER_SANITIZE_STRING) : '';
-		$mac = isset($_POST['mac']) ? filter_input(INPUT_POST, 'mac', FILTER_SANITIZE_STRING) : '';
+		$username = isset($_POST['username']) ? trim(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING)) : '';
+		$email = isset($_POST['email']) ? trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) : '';
+		$password = isset($_POST['password']) ? trim(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING)) : '';
+		$confirmpassword = isset($_POST['confirmpassword']) ? trim(filter_input(INPUT_POST, 'confirmpassword', FILTER_SANITIZE_STRING)) : '';
+		$mac = isset($_POST['mac']) ? trim(filter_input(INPUT_POST, 'mac', FILTER_SANITIZE_STRING)) : '';
 
 		if (empty($username) || empty($email) || empty($password) || empty($confirmpassword))
 		{
@@ -35,6 +36,10 @@
 		elseif ($password != $confirmpassword)
 		{
 			$error_msg = "The password and confirm password must match";
+		}
+		elseif (!filter_var($email, FILTER_VALIDATE_EMAIL))
+		{
+			$error_msg = "Invalid email format";
 		}
 		else
 		{
@@ -113,7 +118,7 @@
         		</div>
         		<div class="form-group">
 			    	<label for="email">Email:</label>		
-				<input type="email" id="email" name="email" class="form-control">
+				<input type="text" id="email" name="email" class="form-control">
 			</div>
 			<div class="form-group">
 				<label for="password">Password:</label>
