@@ -7,39 +7,47 @@ This repository contains a PHP-based login system designed to provide secure aut
 ## Features
 
 - Allows new users to register by providing their username, email, and password
-- Authenticates users based on their credentials and initiates a session
-- Terminates the user's session and redirects to the login page
-- Manages user sessions to ensure secure access to restricted areas
-- Sends account activation emails and password reset links
-- Allows users to reset their password through a secure process
-- Enables users to update their email and other account information
-- Provides administrative controls for managing user accounts
-- Visualizes user login data and other relevant statistics using JavaScript charts
-- Enhances the system with asynchronous data loading and session timeouts for improved user experience
+- Authenticates users based on credentials and initiates a secure session
+- Manages user sessions to control access to restricted areas
+- Sends account activation and password reset emails via PHPMailer
+- Enables password recovery through secure reset links
+- Allows users to update account information and email addresses
+- Provides administrative tools for managing user accounts
+- Displays user activity data and statistics using JavaScript charts
+- Implements asynchronous data loading and session timeout handling for a smoother experience
+
+## Planned Features
+
+- Integration with modern authentication protocols (OAuth2, 2FA)
+- Enhanced dashboard with analytics and usage metrics
+- Dark mode and improved UI styling
+- Modular plugin support for easier customization
+- RESTful API endpoints for user management
+- Docker setup for easy local deployment
 
 ## Requirements
 
-- PHP (version 7.4 or higher recommended)
+- PHP 7.4 or higher
 - MySQL or MariaDB
 - PHPMailer
 
 ## Installation
 
-1. Clone the repository or download the source code
+1. Clone or download the repository.
 
-2. Ensure that PHP and MySQL/MariaDB are installed on your server. Here are guides to install [PHP](https://www.php.net/manual/en/install.php) and [MySQL](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
+2. Ensure that PHP and MySQL/MariaDB are installed on your server. You can find setup guides for [PHP](https://www.php.net/manual/en/install.php) and [MySQL](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
 
 3. Download PHPMailer from [PHPMailer](https://github.com/PHPMailer/PHPMailer) and place it in the main directory
 
-4. Import the SQL schema to set up your database tables:
+4. Import the SQL schema to set up the database tables:
 
 ```
 mysql -u username -p database_name < user_accounts.sql
 ```
 
-5. Edit the `config.php` file with your database settings and `activationmail.php` with your PHPMailer settings
+5. Edit the `config.php` file with the database settings and `activationmail.php` with your PHPMailer settings
 
-6. **(Optional)**: If you want to populate your database with sample data to test the functionality of the login system, import the `randomusers.sql` file:
+6. **(Optional)**: Populate the database with sample data for testing:
 
 ```
 mysql -u username -p database_name < randomusers.sql
@@ -47,7 +55,7 @@ mysql -u username -p database_name < randomusers.sql
 
 ## Usage
 
-To start using the login system, direct your browser to the installation path. Users can register a new account or log in using their existing credentials.
+After setup, open the project in your browser and navigate to the installation path. Users can register, log in, or recover their password using the provided interfaces.
 
 Refer to individual script comments for more detailed instructions on each feature.
 
