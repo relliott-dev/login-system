@@ -6,15 +6,15 @@ This repository contains a PHP-based login system designed to provide secure aut
 
 ## Features
 
-- Allows new users to register by providing their username, email, and password
-- Authenticates users based on credentials and initiates a secure session
-- Manages user sessions to control access to restricted areas
-- Sends account activation and password reset emails via PHPMailer
-- Enables password recovery through secure reset links
-- Allows users to update account information and email addresses
-- Provides administrative tools for managing user accounts
-- Displays user activity data and statistics using JavaScript charts
-- Implements asynchronous data loading and session timeout handling for a smoother experience
+- Register new users with username, email, and password
+- Authenticate users and start secure sessions
+- Manage sessions to protect restricted areas
+- Send activation and password-reset emails (PHPMailer)
+- Enable password recovery via secure reset links
+- Update user account details and email addresses
+- Administer user accounts with an admin panel
+- Visualize activity and statistics with JavaScript charts
+- Implement async loading and session timeouts for smoother UX
 
 ## Planned Features
 
